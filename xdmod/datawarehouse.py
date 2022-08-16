@@ -296,8 +296,7 @@ class DataWareHouse:
         return pd.DataFrame(data=data, index=groups, columns=[metric, ])
     
     
-    def get_qualitydata(self, params, is_numpy=False):
-        
+    def get_qualitydata(self, params, by_resource = False, is_numpy=False, is_json = False):        
         type_to_title = {'gpu': '% of CCR SUPReMM jobs with GPU information', 
                          'hardware': '% of CCR SUPReMM jobs with hardware perf information', 
                          'cpu': '% of CCR SUPReMM jobs with cpu usage information', 
@@ -318,6 +317,8 @@ class DataWareHouse:
         response = json.loads(get_body.decode('utf8'))
         
         if response['success']:
+            if is_json:
+                return response
             jobs = [job for job in response['result']]
             dates = [date.strftime("%Y-%m-%d") for date in pd.date_range(params['start'], params['end'],freq='D').date]
         
@@ -325,10 +326,17 @@ class DataWareHouse:
             
             for i in range(len(jobs)):
                 for j in range(len(dates)):
-                    if response['result'][jobs[i]].get(dates[j], numpy.nan) != 'N/A':
-                        quality[i,j] = response['result'][jobs[i]].get(dates[j], numpy.nan)
-                    else:
+                    result = response['result']
+                    if result[jobs[i]].get(dates[j], None) is None:
                         quality[i,j] = numpy.nan
+                    else:
+                        available = result[jobs[i]][dates[j]]['available']
+                        total = result[jobs[i]][dates[j]]['total']
+                        if total is None or total == '0':
+                            quality[i,j] = numpy.nan
+                        else:
+                            quality[i,j] = round(float(available)/float(total)*100, 0)
+                    
             if is_numpy:
                 return quality
             df = pd.DataFrame(data= quality, index=jobs, columns = dates)

@@ -29,7 +29,7 @@ def quality_heatmap(df):
     fig.tight_layout()
     plt.show()
         
-def resource_plot(df, resource, past_df = None):
+def resource_scatterplot(df, resource, past_df = None):
     
     dates = list(df.columns)
     quality = [df.loc[resource][date] for date in dates]
@@ -63,5 +63,8 @@ def resource_plot(df, resource, past_df = None):
     plt.xlabel('Dates')
     plt.ylabel(df.name)
     plt.title(f'Report for {resource} resource')
-    plt.show()        
+    plt.show() 
+    
+#def resource_barplot(df, resource, past_df = None):
+    
         
