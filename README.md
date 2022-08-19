@@ -33,18 +33,22 @@ A Slack app with a webhook must first be generated to facilitate requests to the
 
 ## Configuration
 
-### Hosts
-The `supremm-alert.ipynb` notebook must be configured to access the desired servers/hosts. The variable `hosts` should map **host name to its url**. For instance, 
+### `config.json`
+The `config.json` file contains the necessary configurable variables.
 
-`'metrics-dev': 'https://metrics-dev.ccr.buffalo.edu:9004', 'ookami': 'https://ookami.ccr.xdmod.org', 'xdmod-dev': 'https://xdmod-dev.ccr.xdmod.org:9002'`
+#### hosts
+This should map **host name to its url**. For instance, 
+
+`"hosts": {"metrics-dev": "https://metrics-dev.ccr.buffalo.edu:9004", "ookami": "https://ookami.ccr.xdmod.org", "xdmod-dev": "https://xdmod-dev.ccr.xdmod.org:9002"}`
+
+#### webhook
+Paste the Slack webhook url into the `webhook` variable.
+
+#### outlier_range
+Provide start and end dates in **YYYY-MM-DD** format.
 
 ### Outlier Detection Setup
-The outlier detection functionality must be configured to a desired date range. The `outlier_detection.py` file contains the function `config_json` which takes the `hosts` dictionary, `start_date`, and optional `end_date` (defaults to today). Function creates a directory from where it was run called `outlier_config` containing all reference json files for `hosts`. For instance,
-
-`config_json(hosts, '2022-05-01', end_date = '2022-07-01', config_all = True)`
-
-### Webhook Variable 
-In the `supremm-alert.ipynb` notebook, paste the Slack webhook url into the `webhook` variable.
+Run the `outlier_config.py` script whenever a date range must be configured. It will pull the necessary variables from the `config.json` file and generate a directory called `outlier_config` containing all reference json files for the configured hosts.
 
 ### Environment Variables
 Additionally, proper environment variables must be assigned for logging in. On the command line, export the following variables:
@@ -58,11 +62,5 @@ Schedule the following command to run from `usr/share/xdmod/html/reports/xdmod-a
 
 Expect a Slack message with alerts and a working link to the full report.
 
-
-```python
-0 6 * * MON cd /data/www/nacruz/share/html/reports/xdmod-alerts && ~/anaconda3/bin/jupyter nbconvert --execute  --to html --output "`date +"%Y-%m-%d"`_report.html" "supremm-alert.ipynb" --no-input
-
-
-
-
-```
+#### Warnings and Notes:
+- Queries for the `script` type may have longer runtimes than other types.
