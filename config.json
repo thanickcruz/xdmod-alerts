@@ -1,0 +1,12 @@
+{
+    "hosts": {
+        "metrics-dev": "https://metrics-dev.ccr.buffalo.edu:9004", 
+        "xdmod-dev": "https://xdmod-dev.ccr.xdmod.org:9002", 
+        "ookami": "https://ookami.ccr.xdmod.org"
+    },
+    "webhook": "",
+    "outlier_range": {
+        "start_date": "2022-05-01", 
+        "end_date": "2022-06-01"
+    }
+}

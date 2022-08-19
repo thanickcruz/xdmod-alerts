@@ -10,21 +10,20 @@ import os
 
 import xdmod.datawarehouse as xdw
 
-def config_json(hosts, start_date, end_date = date.today(), config_all = False):
+def config_json(hosts, start_date, end_date = date.today()):
     
     folder_path = './outlier-config'
     
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
     
-    if config_all:
-        for host in hosts:
-            with xdw.DataWareHouse(hosts[host]) as warehouse:
-                for type in ['gpu','hardware', 'cpu', 'realms']: # ADD SCRIPT LATER ON
-                    df = warehouse.get_qualitydata({"start": start_date, "end": end_date, "type": type})
-                    json_data = df.to_json()
-                    with open(f'outlier-config/{host}-{type}.json', 'w') as json_file:
-                        json_file.write(json_data)
+    for host in hosts:
+        with xdw.DataWareHouse(hosts[host]) as warehouse:
+            for type in ['gpu','hardware', 'cpu', 'realms']: # ADD SCRIPT LATER ON
+                df = warehouse.get_qualitydata({"start": start_date, "end": end_date, "type": type})
+                json_data = df.to_json()
+                with open(f'outlier-config/{host}-{type}.json', 'w') as json_file:
+                    json_file.write(json_data)
                         
 def display_config(hostname, type, resource):
     with open(f'outlier-config/{hostname}-{type}.json', 'r') as f:
