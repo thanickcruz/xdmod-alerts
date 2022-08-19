@@ -4,7 +4,7 @@
         "xdmod-dev": "https://xdmod-dev.ccr.xdmod.org:9002", 
         "ookami": "https://ookami.ccr.xdmod.org"
     },
-    "webhook": "",
+    "webhook": "https://hooks.slack.com/services/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",
     "outlier_range": {
         "start_date": "2022-05-01", 
         "end_date": "2022-06-01"
